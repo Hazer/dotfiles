@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Get the current timestamp
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
@@ -15,10 +15,13 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
+# Initialize a counter for copied files
+copied_count=0
+
 echo "Copying your current dotfiles to $BACKUP_DIR"
 
 # Process the single argument containing all paths
-echo "$1" | while IFS= read -r line; do
+while IFS= read -r line; do
     if [[ "$line" == LINK:* ]]; then
         # Extract the left-hand side of the '=>'
         dotpath=$(echo "$line" | sed 's/^LINK: *//; s/ => .*//')
@@ -30,10 +33,17 @@ echo "$1" | while IFS= read -r line; do
             # Copy the file or directory to the backup directory
             cp -r "$path_in_home" "$BACKUP_DIR"
             echo "Copied: $path_in_home"
+            ((copied_count++))
         else
             echo "Skipped: $path_in_home does not exist in ~/..."
         fi
     fi
-done
+done <<< "$1"
 
-echo "Backup completed."
+# Check if any files were copied
+if [ "$copied_count" -eq 0 ]; then
+    rm -rf "$BACKUP_DIR"
+    echo "No backup needed, found no overwriting files."
+else
+    echo "Backup completed."
+fi
