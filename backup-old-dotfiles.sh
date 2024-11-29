@@ -18,7 +18,7 @@ fi
 # Initialize a counter for copied files
 copied_count=0
 
-echo "Copying your current dotfiles to $BACKUP_DIR"
+echo "\nCopying your current conflicting dotfiles to\n $BACKUP_DIR"
 
 # Process the single argument containing all paths
 while IFS= read -r line; do
