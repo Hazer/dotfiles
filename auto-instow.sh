@@ -36,6 +36,6 @@ cd ~/.dotfiles
 
 ./backup-old-dotfiles.sh "$(stow -n -v . --adopt 2>&1)"
 
-echo "Activating stow and overwritting..."
+echo "Activating stow and overwriting..."
 stow . --adopt
 git restore .
