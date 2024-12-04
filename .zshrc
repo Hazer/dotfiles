@@ -205,6 +205,8 @@ alias ohmyzsh="zed $ZSH"
 # Add flags to existing aliases.
 alias ls="${aliases[ls]:-ls} -A"
 alias la="ls -la"
+alias targz="tar --disable-copyfile --exclude='.DS_Store' -cvzf"
+alias untargz="tar -xzf"
 
 # Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
 setopt glob_dots     # no special treatment for file names with a leading dot
