@@ -187,6 +187,7 @@ function create_mise_completions() {
 }
 # Mise completions stuff
 create_mise_completions "$Z4H/completions"
+create_mise_completions "$ZSH_CACHE_DIR/completions"
 
 function z() { echo "Use Alt+R" }
 function nvm() { echo "Use mise install/use node" && mise ls node }
