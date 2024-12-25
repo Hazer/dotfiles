@@ -102,17 +102,19 @@ if [[ ! -e $HOME/.local/bin/mise ]] && ! command -v "mise" 2>&1 >/dev/null; then
 fi
 
 # Install specific OS tools
-# if $IS_MACOS; then
-#    z4h source ~/.zsh-extras/install.mac.zsh
-# elif [[ "$PKG_MANAGER" == "apt" ]]; then
-#     z4h source ~/.zsh-extras/install.linux.apt.zsh
-# elif [[ "$PKG_MANAGER" == "apk" ]]; then
-#     z4h source ~/.zsh-extras/install.linux.alpine.zsh
-# elif [[ "$PKG_MANAGER" == "dnf" ]]; then
-#     z4h source ~/.zsh-extras/install.linux.fedora.zsh
-# else
-#     echo "Unknown OS! $OSTYPE ($HOSTTYPE) | $(uname -srm)| Package Manager: $PKG_MANAGER"
-# fi
+if $IS_MACOS; then
+    z4h source ~/.zsh-extras/install.mac.zsh
+elif [[ "$PKG_MANAGER" == "apt" ]]; then
+    z4h source ~/.zsh-extras/install.linux.apt.zsh
+elif [[ "$PKG_MANAGER" == "apk" ]]; then
+    z4h source ~/.zsh-extras/install.linux.alpine.zsh
+elif [[ "$PKG_MANAGER" == "dnf" ]]; then
+    z4h source ~/.zsh-extras/install.linux.fedora.zsh
+elif [[ "$PKG_MANAGER" == "pacman" ]]; then
+    z4h source ~/.zsh-extras/install.linux.arch.zsh
+else
+    echo "Unknown OS! $OSTYPE ($HOSTTYPE) | $(uname -srm)| Package Manager: $PKG_MANAGER"
+fi
 
 # Install or update core components (fzf, zsh-autosuggestions, etc.) and
 # initialize Zsh. After this point console I/O is unavailable until Zsh
@@ -122,6 +124,7 @@ z4h init || return
 
 # Extend PATH.
 path=(~/bin $path)
+path=(~/.config/v-analyzer/bin $path)
 fpath=("$Z4H/completions" $fpath)
 
 # Export environment variables.
@@ -129,8 +132,10 @@ export GPG_TTY=$TTY
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-   # If remote, we use nano
-   export EDITOR='nano'
+   # If remote, we use nano/hx/ox
+   export EDITOR='hx'
+   #export EDITOR='ox'
+   #export EDITOR='nano'
 else
    export EDITOR='zed'
 fi
@@ -146,6 +151,8 @@ elif [[ "$PKG_MANAGER" == "apk" ]]; then
     z4h source ~/.zsh-extras/source.linux.alpine.zsh
 elif [[ "$PKG_MANAGER" == "dnf" ]]; then
     z4h source ~/.zsh-extras/source.linux.fedora.zsh
+elif [[ "$PKG_MANAGER" == "pacman" ]]; then
+    z4h source ~/.zsh-extras/source.linux.arch.zsh
 else
     echo "Unknown OS! $OSTYPE ($HOSTTYPE)\n$(uname -srm)"
 fi
