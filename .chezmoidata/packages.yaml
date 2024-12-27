@@ -28,15 +28,21 @@ packages:
         echo "Configuring ubuntu packages"
       - |
         echo "Adding mise repository"
-        sudo apt update -y && sudo apt install -y gpg sudo wget curl
+        sudo apt install -y gpg sudo wget curl
         sudo install -dm 755 /etc/apt/keyrings
         wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null
         echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
+      - |
+        echo "Adding caddy repository"
+        sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
     repos:
       - "ppa:maveonair/helix-editor"
     install:
       - "helix"
       - "mise"
+      - "caddy"
     postinstall:
       - |
         echo "Configured ubuntu packages"
@@ -48,11 +54,12 @@ packages:
     repos:
     #  - "https://download.docker.com/linux/fedora/docker-ce.repo"
     copr:
-    #  - "caddy/caddy"
+      - "caddy/caddy"
     install:
       - "zsh"
       - "git"
       - "helix"
+      - "caddy"
     postinstall:
       - |
         echo "Installed all packages"
