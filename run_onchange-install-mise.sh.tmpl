@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Install mise if not found
+if [[ ! -e $HOME/.local/bin/mise ]] && ! command -v "mise" 2>&1 >/dev/null; then
+    curl https://mise.run | MISE_QUIET=0 sh
+    # Is `usage` command available
+    if ! command -v "usage" 2>&1 >/dev/null && ! mise which usage &>/dev/null; then
+        echo "usage not be found, installing"
+        $HOME/.local/bin/mise use -y -g usage
+    fi
+    echo '=============== zsh4humans ============'
+    echo 'mise installed loading via:
+        "z4h load   ohmyzsh/ohmyzsh/plugins/mise"
+    '
+fi

@@ -1,0 +1,21 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/zsh
+
+{{ range .packages.darwin.preinstall -}}
+{{ . }}
+{{ end -}}
+
+brew bundle --no-lock --file=/dev/stdin <<EOF
+{{ range .packages.darwin.brews -}}
+brew {{ . | quote }}
+{{ end -}}
+{{ range .packages.darwin.casks -}}
+cask {{ . | quote }}
+{{ end -}}
+EOF
+
+{{ range .packages.darwin.postinstall -}}
+{{ . }}
+{{ end -}}
+
+{{ end -}}

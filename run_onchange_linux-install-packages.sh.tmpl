@@ -1,0 +1,71 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+
+PKG_MANAGER=$(( command -v apt > /dev/null 2>&1 && echo "apt" || ( command -v dnf > /dev/null 2>&1 && echo "dnf" || ( command -v apk > /dev/null 2>&1 && echo "apk" || ( command -v pacman > /dev/null 2>&1 && echo "pacman" || echo "unknown" ) ) ) )
+
+if [[ "$PKG_MANAGER" == "apt" ]]; then
+  {{ range .packages.apt.preinstall -}}
+    {{ . }}
+  {{ end -}}
+  {{ range .packages.apt.repos -}}
+    sudo add-apt-repository -y {{ . | quote }}
+  {{ end -}}
+  sudo apt update
+  {{ range .packages.apt.install -}}
+    sudo apt install -y {{ . }}
+  {{ end -}}
+  {{ range .packages.apt.postinstall -}}
+    {{ . }}
+  {{ end -}}
+elif [[ "$PKG_MANAGER" == "apk" ]]; then
+  {{ range .packages.apk.preinstall -}}
+    {{ . }}
+  {{ end -}}
+  sudo apk update
+  {{ range .packages.apk.add -}}
+    sudo apk -y add {{ . }}
+  {{ end -}}
+  {{ range .packages.apk.postinstall -}}
+    {{ . }}
+  {{ end -}}
+elif [[ "$PKG_MANAGER" == "dnf" ]]; then
+  {{ range .packages.dnf.preinstall -}}
+    {{ . }}
+  {{ end -}}
+  sudo dnf -y install dnf-plugins-core
+  {{ range .packages.dnf.repos -}}
+    sudo dnf -y config-manager --add-repo {{ . | quote }}
+  {{ end -}}
+  sudo dnf install 'dnf-command(copr)'
+  {{ range .packages.dnf.copr -}}
+    sudo dnf -y copr enable @{{ . }}
+  {{ end -}}
+  sudo dnf -y check-update
+  {{ range .packages.dnf.install -}}
+    sudo dnf -y install {{ . }}
+  {{ end -}}
+  {{ range .packages.dnf.postinstall -}}
+    {{ . }}
+  {{ end -}}
+elif [[ "$PKG_MANAGER" == "pacman" ]]; then
+    {{ range .packages.pacman.preinstall -}}
+        {{ . }}
+    {{ end -}}
+    sudo pacman -Syu
+    {{ range .packages.arc.pacman -}}
+        sudo pacman -S --noconfirm {{ . }}
+    {{ end -}}
+    if command -v "yay" 2>&1 >/dev/null; then
+        yay -Syu
+        {{ range .packages.arch.aur -}}
+            yay -S --noconfirm {{ . }}
+        {{ end -}}
+    fi
+    {{ range .packages.arch.postinstall -}}
+      {{ . }}
+    {{ end -}}
+else
+    echo "Unknown OS! $OSTYPE ($HOSTTYPE) | $(uname -srm)| Package Manager: $PKG_MANAGER"
+fi
+
+{{ end -}}
