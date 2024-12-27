@@ -48,11 +48,11 @@ elif [[ "$PKG_MANAGER" == "dnf" ]]; then
     {{ . }}
   {{ end -}}
 elif [[ "$PKG_MANAGER" == "pacman" ]]; then
-    {{ range .packages.pacman.preinstall -}}
+    {{ range .packages.arch.preinstall -}}
         {{ . }}
     {{ end -}}
     sudo pacman -Syu
-    {{ range .packages.arc.pacman -}}
+    {{ range .packages.arch.pacman -}}
         sudo pacman -S --noconfirm {{ . }}
     {{ end -}}
     if command -v "yay" 2>&1 >/dev/null; then
