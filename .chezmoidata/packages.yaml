@@ -18,11 +18,15 @@ packages:
       - "zsh"
       - "git"
       - "helix"
+    postinstall:
+      - |
+        echo "Configured alpine packages"
 
   apt:
     preinstall:
       - |
         echo "Configuring ubuntu packages"
+      - |
         echo "Adding mise repository"
         sudo apt update -y && sudo apt install -y gpg sudo wget curl
         sudo install -dm 755 /etc/apt/keyrings
@@ -41,9 +45,9 @@ packages:
     preinstall:
       - |
         echo "Configuring fedora packages"
-    #repos:
+    repos:
     #  - "https://download.docker.com/linux/fedora/docker-ce.repo"
-    #copr:
+    copr:
     #  - "caddy/caddy"
     install:
       - "zsh"
