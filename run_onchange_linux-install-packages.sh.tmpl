@@ -1,5 +1,5 @@
 {{ if eq .chezmoi.os "linux" -}}
-#!/bin/sh
+#!/bin/zsh
 
 PKG_MANAGER=$( command -v apt > /dev/null 2>&1 && echo "apt" || ( command -v dnf > /dev/null 2>&1 && echo "dnf" || ( command -v apk > /dev/null 2>&1 && echo "apk" || ( command -v pacman > /dev/null 2>&1 && echo "pacman" || echo "unknown" ) ) ) )
 

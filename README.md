@@ -1,12 +1,17 @@
 # Hazer's Dotfiles
 
-## Installation
+## Setup
 
-Considering curl, git and zsh are already installed:
+### Pre-requisites
+ - curl
+ - zsh
+
+### Install:
 ```sh
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply Hazer
+```
 
-## IF ZSH IS NOT INSTALLED YET
-## RUN BELOW COMMAND
-# Z4H_BOOTSTRAPPING=1 . ~/.zshenv
+### Update
+```sh
+chezmoi update
 ```
