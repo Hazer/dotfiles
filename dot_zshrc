@@ -57,8 +57,6 @@ zstyle ':z4h:ssh:*' send-extra-files '~/.zsh-extras'
 
 # Evaluate environment
 IS_MACOS=$( [[ "$OSTYPE" == "darwin"* ]] && echo true || echo false )
-IS_LINUX=$( ! $IS_MACOS && [[ "$OSTYPE" == "linux"* ]] && echo true || echo false )
-PKG_MANAGER=$( [[ "$IS_MACOS" == true ]] && echo "brew" || ( command -v apt > /dev/null 2>&1 && echo "apt" || ( command -v dnf > /dev/null 2>&1 && echo "dnf" || ( command -v apk > /dev/null 2>&1 && echo "apk" || ( command -v pacman > /dev/null 2>&1 && echo "pacman" || echo "unknown" ) ) ) ) )
 
 # Keyboard type: 'mac' or 'pc'.
 if $IS_MACOS; then
@@ -83,38 +81,13 @@ if [[ ! -e $HOME/.local/bin/mise ]] && ! command -v "mise" 2>&1 >/dev/null; then
         $HOME/.local/bin/mise use -y -g usage
     fi
     echo '=============== zsh4humans ============'
-    echo 'do instead:
-        "z4h load   ohmyzsh/ohmyzsh/plugins/mise" instead
-    '
-    echo 'and for completions:
-    # set fpath
-    fpath=("$Z4H/completions" $fpath)
-    # then
-    function create_mise_completions() {
-        if [[ ! -e "$1/_mise" ]]; then
-            mkdir -p "$1"
-            mise completion zsh > "$1/_mise"
-        fi
-    }
-    # Mise completions stuff
-    create_mise_completions "$Z4H/completions"
+    echo 'mise installed loading via:
+        "z4h load   ohmyzsh/ohmyzsh/plugins/mise"
     '
 fi
 
 # Install specific OS tools
-if $IS_MACOS; then
-    z4h source ~/.zsh-extras/install.mac.zsh
-elif [[ "$PKG_MANAGER" == "apt" ]]; then
-    z4h source ~/.zsh-extras/install.linux.apt.zsh
-elif [[ "$PKG_MANAGER" == "apk" ]]; then
-    z4h source ~/.zsh-extras/install.linux.alpine.zsh
-elif [[ "$PKG_MANAGER" == "dnf" ]]; then
-    z4h source ~/.zsh-extras/install.linux.fedora.zsh
-elif [[ "$PKG_MANAGER" == "pacman" ]]; then
-    z4h source ~/.zsh-extras/install.linux.arch.zsh
-else
-    echo "Unknown OS! $OSTYPE ($HOSTTYPE) | $(uname -srm)| Package Manager: $PKG_MANAGER"
-fi
+z4h source ~/.zsh-extras/install.zsh
 
 # Install or update core components (fzf, zsh-autosuggestions, etc.) and
 # initialize Zsh. After this point console I/O is unavailable until Zsh
@@ -137,25 +110,13 @@ if [[ -n $SSH_CONNECTION ]]; then
    #export EDITOR='ox'
    #export EDITOR='nano'
 else
-   export EDITOR='zed'
+   export EDITOR='zed --wait'
 fi
 
 export VISUAL="$EDITOR"
 
 # Source general OS configs
-if $IS_MACOS; then
-    z4h source ~/.zsh-extras/source.mac.zsh
-elif [[ "$PKG_MANAGER" == "apt" ]]; then
-    z4h source ~/.zsh-extras/source.linux.apt.zsh
-elif [[ "$PKG_MANAGER" == "apk" ]]; then
-    z4h source ~/.zsh-extras/source.linux.alpine.zsh
-elif [[ "$PKG_MANAGER" == "dnf" ]]; then
-    z4h source ~/.zsh-extras/source.linux.fedora.zsh
-elif [[ "$PKG_MANAGER" == "pacman" ]]; then
-    z4h source ~/.zsh-extras/source.linux.arch.zsh
-else
-    echo "Unknown OS! $OSTYPE ($HOSTTYPE)\n$(uname -srm)"
-fi
+z4h source ~/.zsh-extras/source.zsh
 
 # Source additional local files if they exist.
 z4h source ~/.local.env.zsh
@@ -206,8 +167,8 @@ function rbenv() { echo "Use mise install/use ruby" && mise ls ruby }
 
 # Define aliases.
 alias tree='tree -a -I .git'
-alias zshconfig="\$EDITOR ~/.zshrc"
-alias zshsource="source ~/.zshrc"
+alias zshconfig="chezmoi edit --apply ~/.zshrc"
+alias zshsource="exec zsh"
 alias ohmyzsh="zed $ZSH"
 
 # Add flags to existing aliases.

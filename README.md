@@ -2,17 +2,10 @@
 
 ## Installation
 
-Considering git and zsh are already installed:
+Considering curl, git and zsh are already installed:
 ```sh
-# clone this repo
-git clone git@github.com:Hazer/dotfiles.git ~/.dotfiles
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply Hazer
 
-cd ~/.dotfiles
-
-chmod +x ~/.dotfiles/backup-old-dotfiles.sh
-chmod +x ~/.dotfiles/auto-instow.sh
-
-~/.dotfiles/auto-instow.sh
 ## IF ZSH IS NOT INSTALLED YET
 ## RUN BELOW COMMAND
 # Z4H_BOOTSTRAPPING=1 . ~/.zshenv

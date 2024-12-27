@@ -1,0 +1,10 @@
+{{- $osid := .chezmoi.os -}}
+{{- if hasKey .chezmoi.osRelease "id" -}}
+{{-   $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
+{{- end -}}
+
+{{- $domain := promptStringOnce . "domain" "Domain host?" -}}
+
+[data]
+    osid = {{ $osid | quote }}
+    domain = {{ $domain | quote }}
