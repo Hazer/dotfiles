@@ -1,3 +1,4 @@
+export HOMEBREW_AUTO_UPDATE_SECS=259200
 
 export PLATFORM_TOOLS=~/Library/Android/sdk/platform-tools/
 if [ -d "$PLATFORM_TOOLS" ]; then

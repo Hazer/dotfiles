@@ -77,6 +77,7 @@ z4h init || return
 
 # Extend PATH.
 path=(~/bin $path)
+path=(~/.local/bin $path)
 path=(~/.config/v-analyzer/bin $path)
 fpath=("$Z4H/completions" $fpath)
 
@@ -139,10 +140,23 @@ function create_mise_completions() {
 create_mise_completions "$Z4H/completions"
 create_mise_completions "$ZSH_CACHE_DIR/completions"
 
-function z() { echo "Use Alt+R" }
+{{ if eq .chezmoi.os "darwin" -}}
+# Init television completions
+eval "$(tv init zsh)"
+{{ end -}}
+
+function z() { echo "Use Alt+R or tv dirs" }
 function nvm() { echo "Use mise install/use node" && mise ls node }
 function pyenv() { echo "Use mise install/use python" && mise ls python }
 function rbenv() { echo "Use mise install/use ruby" && mise ls ruby }
+
+function bat-show-themes() {
+    bat --list-themes | tv --preview="bat -n --theme='{}' --color=always $(tv)"
+}
+
+function man-color() {
+    MANPAGER="sh -c 'col -bx | bat --theme=\"Monokai Extended\" -l man -p'" LESS='-iRFMx4' man "$@"
+}
 
 # Define named directories: ~w <=> Windows home directory on WSL.
 #[[ -z $z4h_win_home ]] || hash -d w=$z4h_win_home
@@ -154,8 +168,20 @@ alias zshsource="exec zsh"
 alias ohmyzsh="zed $ZSH"
 
 # Add flags to existing aliases.
-alias ls="${aliases[ls]:-ls} -A"
-alias la="ls -la"
+#alias ls="${aliases[ls]:-ls} -A"
+#alias la="ls -la"
+alias ls="eza --hyperlink --header --all --icons --git --sort name"
+alias la="ls --long"
+
+# Use bat to colorize output of help commands.
+alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
+alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
+
+# Use bat to colorize output
+alias cat='bat --paging=never --style=plain'
+alias batjson='json_pp | bat --paging=never --style=plain -l json'
+alias fzfp="fzf --preview 'bat --color \"always\" {}'"
+
 alias targz="tar --disable-copyfile --exclude='.DS_Store' -cvzf"
 alias untargz="tar -xzf"
 
