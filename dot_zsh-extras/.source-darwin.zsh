@@ -1,6 +1,11 @@
 export HOMEBREW_AUTO_UPDATE_SECS=259200
 
-export PLATFORM_TOOLS=~/Library/Android/sdk/platform-tools/
+export ANDROID_HOME=~/Library/Android/sdk
+if [ -d "$ANDROID_HOME" ]; then
+    path=($ANDROID_HOME/emulator $path)
+fi
+
+export PLATFORM_TOOLS=$ANDROID_HOME/platform-tools/
 if [ -d "$PLATFORM_TOOLS" ]; then
     path=($PLATFORM_TOOLS $path)
 fi

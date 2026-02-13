@@ -79,7 +79,14 @@ z4h init || return
 path=(~/bin $path)
 path=(~/.local/bin $path)
 path=(~/.config/v-analyzer/bin $path)
+path=(~/.maestro/bin $path)
+path=(~/.config/v-analyzer/bin $path)
+path=(~/.nimble/bin $path)
+path=(~/Library/pnpm $path)
+path=(~/Library/pnpm/bin $path)
 fpath=("$Z4H/completions" $fpath)
+
+export PNPM_HOME="~/Library/pnpm"
 
 # Export environment variables.
 export GPG_TTY=$TTY
@@ -96,11 +103,30 @@ fi
 
 export VISUAL="$EDITOR"
 
+# Use: keychain-environment-variable SECRET_ENV_VAR
+function keychain-environment-variable() {
+    security find-generic-password -w -a ${USER} -D "environment variable" -s "${1}"
+}
+
+# Use: set-keychain-environment-variable SECRET_ENV_VAR
+#   provide: super_secret_key_abc123
+function set-keychain-environment-variable() {
+    [ -n "$1" ] || print "Missing environment variable name"
+
+    # Note: if using bash, use `-p` to indicate a prompt string, rather than the leading `?`
+    read -s "?Enter Value for ${1}: " secret
+
+    ( [ -n "$1" ] && [ -n "$secret" ] ) || return 1
+    security add-generic-password -U -a ${USER} -D "environment variable" -s "${1}" -w "${secret}"
+}
+
 # Source general OS configs
 z4h source ~/.zsh-extras/source.zsh
 
 # Source additional local files if they exist.
 z4h source ~/.local.env.zsh
+
+eval "$(mise activate zsh)"
 
 # Use additional Git repositories pulled in with `z4h install`.
 #
@@ -112,14 +138,12 @@ z4h source ~/.local.env.zsh
 z4h load   ohmyzsh/ohmyzsh/plugins/macos
 {{ end -}}
 
-z4h load   ohmyzsh/ohmyzsh/plugins/mise
-
 # Define key bindings.
 z4h bindkey undo Ctrl+/   Shift+Tab  # undo the last command line change
 z4h bindkey redo Option+/            # redo the last undone command line change
 
-z4h bindkey z4h-cd-back    Shift+Left   # cd into the previous directory
-z4h bindkey z4h-cd-forward Shift+Right  # cd into the next directory
+#z4h bindkey z4h-cd-back    Shift+Left   # cd into the previous directory
+#z4h bindkey z4h-cd-forward Shift+Right  # cd into the next directory
 z4h bindkey z4h-cd-up      Shift+Up     # cd into the parent directory
 z4h bindkey z4h-cd-down    Shift+Down   # cd into a child directory
 
@@ -138,7 +162,9 @@ function create_mise_completions() {
 }
 # Mise completions stuff
 create_mise_completions "$Z4H/completions"
-create_mise_completions "$ZSH_CACHE_DIR/completions"
+# create_mise_completions "$ZSH_CACHE_DIR/completions"
+
+eval "$(bun completions $Z4H/completions)"
 
 {{ if eq .chezmoi.os "darwin" -}}
 # Init television completions
@@ -184,6 +210,7 @@ alias fzfp="fzf --preview 'bat --color \"always\" {}'"
 
 alias targz="tar --disable-copyfile --exclude='.DS_Store' -cvzf"
 alias untargz="tar -xzf"
+alias rimraf="rustraf"
 
 # Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
 setopt glob_dots     # no special treatment for file names with a leading dot
