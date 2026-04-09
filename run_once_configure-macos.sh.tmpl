@@ -1,0 +1,18 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/zsh
+
+defaults write com.apple.dock tilesize 29
+defaults write com.apple.dock magnification 1
+defaults write com.apple.dock orientation bottom
+defaults write com.apple.dock wvous-br-corner 14
+killall Dock 2>/dev/null || true
+
+defaults write com.apple.AppleMultitouchTrackpad Clicking 1
+
+defaults write com.apple.finder FXPreferredViewStyle Nlsv
+defaults write com.apple.finder AppleShowAllFiles 1
+
+defaults write NSGlobalDomain AppleInterfaceStyle Dark
+
+echo "macOS defaults configured"
+{{- end }}

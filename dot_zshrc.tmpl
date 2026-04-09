@@ -80,7 +80,6 @@ path=(~/bin $path)
 path=(~/.local/bin $path)
 path=(~/.config/v-analyzer/bin $path)
 path=(~/.maestro/bin $path)
-path=(~/.config/v-analyzer/bin $path)
 path=(~/.nimble/bin $path)
 path=(~/Library/pnpm $path)
 path=(~/Library/pnpm/bin $path)
@@ -92,16 +91,7 @@ export PNPM_HOME="~/Library/pnpm"
 export GPG_TTY=$TTY
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-   # If remote, we use nano/hx/ox
-   export EDITOR='hx'
-   #export EDITOR='ox'
-   #export EDITOR='nano'
-else
-   export EDITOR='zed --wait'
-fi
-
-export VISUAL="$EDITOR"
+{{- includeTemplate "editor-config.tmpl" . -}}
 
 # Use: keychain-environment-variable SECRET_ENV_VAR
 function keychain-environment-variable() {

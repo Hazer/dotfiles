@@ -1,0 +1,14 @@
+[user]
+	name = Vithorio Polten
+{{- if eq .domain "macbook.ipiranga" }}
+	email = vithorio.polten@ipiranga.ipiranga
+{{- else }}
+	email = vithorio@vithorio.codes
+{{- end }}
+[merge]
+    tool = intellij
+[mergetool "intellij"]
+    cmd = idea merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+    trustExitCode = true
+[mergetool]
+    keepBackup = false

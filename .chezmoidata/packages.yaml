@@ -9,7 +9,13 @@ packages:
       - "bat"
       - "ox"
       - "television"
+      - "git-delta"
+      - "pinentry-mac"
     casks:
+      - "font-fira-code"
+      - "font-hack"
+      - "font-jetbrains-mono"
+      - "font-meslo-lg"
     postinstall:
       - |
         echo "Installed brew packages"

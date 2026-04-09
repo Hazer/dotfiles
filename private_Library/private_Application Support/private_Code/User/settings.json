@@ -1,0 +1,21 @@
+{
+  "diffEditor.codeLens": true,
+  "terminal.integrated.fontLigatures.enabled": true,
+  "terminal.integrated.fontFamily": "MesloLGS NF, Hack",
+  "editor.fontFamily": "'JetBrains Mono', FiraCode, 'MesloLGS NF', Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "kilo-code.allowedCommands": [
+    "git log",
+    "git diff",
+    "git show",
+    "npm test",
+    "npm install",
+    "tsc",
+    "cargo test"
+  ],
+  "kilo-code.deniedCommands": [
+    "git reset",
+    "rm -rf apps/kmv-app/src/modules/GoodbyeModule"
+  ],
+  "biome.suggestInstallingGlobally": false
+}

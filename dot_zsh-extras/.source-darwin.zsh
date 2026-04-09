@@ -1,5 +1,7 @@
 export HOMEBREW_AUTO_UPDATE_SECS=259200
 
+source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+
 export ANDROID_HOME=~/Library/Android/sdk
 if [ -d "$ANDROID_HOME" ]; then
     path=($ANDROID_HOME/emulator $path)
