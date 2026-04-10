@@ -1,0 +1,11 @@
+{{- /* Remove old editor configs */ -}}
+{{- if eq .chezmoi.os "darwin" -}}
+.config/nvim
+.config/nvim-lazy
+.spacemacs
+{{- end -}}
+
+{{- /* Remove old zsh plugins */ -}}
+.oh-my-zsh
+.zinit
+.zplugin

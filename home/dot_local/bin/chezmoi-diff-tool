@@ -1,0 +1,30 @@
+#!/bin/bash
+# Switch between IntelliJ IDEA and delta for chezmoi diff/merge
+
+CHOICE=${1:-idea}
+
+case "$CHOICE" in
+  idea|intellij)
+    echo "Switching to IntelliJ IDEA for diff/merge..."
+    chezmoi config set diff.command "/Users/vithoriopolten/Library/Application Support/JetBrains/Toolbox/scripts/idea"
+    chezmoi config set diff.args '["diff", "{{ .Destination }}", "{{ .Target }}"]'
+    chezmoi config set merge.command "/Users/vithoriopolten/Library/Application Support/JetBrains/Toolbox/scripts/idea"
+    chezmoi config set merge.args '["merge", "{{ .Destination }}", "{{ .Target }}", "{{ .Source }}", "{{ .Destination }}"]'
+    echo "✓ Set IntelliJ IDEA as diff/merge tool"
+    ;;
+  delta)
+    echo "Switching to delta for diff..."
+    chezmoi config set diff.command "delta"
+    chezmoi config set diff.args '--paging=never'
+    chezmoi config unset merge.command
+    echo "✓ Set delta as diff tool (vimdiff will be used for merge)"
+    ;;
+  *)
+    echo "Usage: $0 [idea|delta]"
+    exit 1
+    ;;
+esac
+
+echo ""
+echo "Current diff config:"
+chezmoi dump-config | grep -A2 '\[diff\]'

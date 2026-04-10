@@ -1,0 +1,7 @@
+# Editor configuration based on OS
+{{- if eq .chezmoi.os "darwin" -}}
+export EDITOR='zed --wait'
+{{- else -}}
+export EDITOR='hx'
+{{- end -}}
+export VISUAL="$EDITOR"

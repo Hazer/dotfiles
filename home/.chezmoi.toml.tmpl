@@ -1,0 +1,46 @@
+{{- $osid := .chezmoi.os -}}
+{{- if hasKey .chezmoi.osRelease "id" -}}
+{{-   $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
+{{- end -}}
+
+{{- $domain := promptStringOnce . "domain" "Domain host" -}}
+
+[data]
+    osid = {{ $osid | quote }}
+    domain = {{ $domain | quote }}
+
+[data.chezmoi]
+    osid = {{ $osid | quote }}
+
+# Diff and merge configuration
+{{- if eq .chezmoi.os "darwin" -}}
+[diff]
+command = "/Users/vithoriopolten/Library/Application Support/JetBrains/Toolbox/scripts/idea"
+args = ["diff", "{{ .Destination }}", "{{ .Target }}"]
+
+[merge]
+command = "/Users/vithoriopolten/Library/Application Support/JetBrains/Toolbox/scripts/idea"
+args = ["merge", "{{ .Destination }}", "{{ .Target }}", "{{ .Source }}", "{{ .Destination }}"]
+{{- end -}}
+
+# Enhanced configuration
+{{- $requiredVersion := "2.60.0" -}}
+
+# Ensure minimum chezmoi version
+[minVersion]
+  version = {{ $requiredVersion | quote }}
+
+{{- if eq .chezmoi.os "darwin" -}}
+# GPG/Age pinentry for macOS
+[pinentry]
+  command = "pinentry-mac"
+{{- end -}}
+
+# Color output
+[color]
+  enabled = true
+
+# Warning configuration
+[warnings]
+  # Don't warn about uncommitted changes in working tree
+  workingTreeDirty = false
