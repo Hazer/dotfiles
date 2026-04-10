@@ -1,0 +1,51 @@
+[user]
+	name = Vithorio Polten
+{{- if eq .domain "macbook.ipiranga" }}
+	email = vithorio.polten@ipiranga.ipiranga
+{{- else }}
+	email = vithorio@vithorio.codes
+{{- end }}
+
+[merge]
+	tool = intellij
+[mergetool "intellij"]
+	cmd = idea merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+	trustExitCode = true
+[mergetool]
+	keepBackup = false
+
+[init]
+	defaultBranch = main
+
+[push]
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[rebase]
+	autoStash = true
+
+[core]
+	whitespace = trailing-space,space-before-tab
+
+[advice]
+	addEmptyPathspec = false
+	pushNonFastForward = false
+
+{{- if .advancedGit }}
+
+[pull]
+	rebase = true
+
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+
+[merge]
+	conflictStyle = zdiff3
+
+[rebase]
+	autoSquash = true
+	updateRefs = true
+{{- end }}
