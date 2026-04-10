@@ -1,13 +1,13 @@
 {{- if eq .chezmoi.os "darwin" -}}
 Include ~/.orbstack/ssh/config
+
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
 {{- end }}
 
 Host gitlab.com
-  AddKeysToAgent yes
-  UseKeychain yes
   IdentityFile ~/.ssh/id_gitlab
 
 Host github.com
-  AddKeysToAgent yes
-  UseKeychain yes
   IdentityFile ~/.ssh/id_gitlab
